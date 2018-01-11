@@ -47,7 +47,8 @@ public class UserAcceptanceTest {
 		headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-		HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<MultiValueMap<String, Object>>(params, headers);
+		HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<MultiValueMap<String, Object>>(params,
+				headers);
 
 		return template.postForEntity(path, request, String.class);
 	}
@@ -91,6 +92,22 @@ public class UserAcceptanceTest {
 
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		assertTrue(response.getHeaders().getLocation().getPath().contains("/;jsessionid="));
+	}
+
+	@Test
+	public void loginEmptyEmail() {
+		MultiValueMap<String, Object> params = loginParams("empty" + "testUser@korea.kr", "password");
+		ResponseEntity<String> response = createPostResponse(params, "/users/login");
+
+		assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
+	}
+
+	@Test
+	public void loginOtherPassword() {
+		MultiValueMap<String, Object> params = loginParams("testUser@korea.kr", "password" + "222");
+		ResponseEntity<String> response = createPostResponse(params, "/users/login");
+
+		assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
 	}
 
 }

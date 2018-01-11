@@ -5,10 +5,13 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import trello.UnAuthenticationException;
 import trello.domain.UserRepository;
@@ -40,12 +43,18 @@ public class UserController {
 
 	@PostMapping("/login")
 	public String login(UserDto userDto, HttpSession session) {
-		try {
+//		try {
 			userService.login(userDto.toUser());
 			session.setAttribute("logined", userDto.toUser());
-		} catch (UnAuthenticationException e) {
-			log.debug("로그인 실패");
-		}
+//		} catch (UnAuthenticationException e) {
+//			log.debug("로그인 실패");
+//		}
 		return "redirect:/";
+	}
+
+	@ExceptionHandler(UnAuthenticationException.class)
+	@ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+	public void unAuthentication() {
+		log.debug("UnAuthenticationException is happened!");
 	}
 }
