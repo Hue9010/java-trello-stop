@@ -1,13 +1,7 @@
 buildscript {
-	ext {
-		springBootVersion = '1.5.9.RELEASE'
-	}
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-	}
+	ext { springBootVersion = '1.5.9.RELEASE' }
+	repositories { mavenCentral() }
+	dependencies { classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}") }
 }
 
 apply plugin: 'java'
@@ -18,9 +12,7 @@ group = 'hue'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
-repositories {
-	mavenCentral()
-}
+repositories { mavenCentral() }
 
 
 dependencies {
@@ -29,6 +21,8 @@ dependencies {
 	compile('pl.allegro.tech.boot:handlebars-spring-boot-starter:0.2.15')
 	runtime('org.springframework.boot:spring-boot-devtools')
 	runtime('com.h2database:h2')
+	runtime('net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.1.0')
 	compileOnly('org.projectlombok:lombok')
+	testCompile('io.rest-assured:rest-assured:3.0.3')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
