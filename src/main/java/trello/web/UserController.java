@@ -1,5 +1,7 @@
 package trello.web;
 
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import trello.UnAuthenticationException;
 import trello.domain.UserRepository;
 import trello.dto.UserDto;
 import trello.service.UserService;
@@ -35,4 +38,14 @@ public class UserController {
 		return "/login";
 	}
 
+	@PostMapping("/login")
+	public String login(UserDto userDto, HttpSession session) {
+		try {
+			userService.login(userDto.toUser());
+			session.setAttribute("logined", userDto.toUser());
+		} catch (UnAuthenticationException e) {
+			log.debug("로그인 실패");
+		}
+		return "redirect:/";
+	}
 }

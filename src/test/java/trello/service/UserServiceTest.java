@@ -1,35 +1,53 @@
 package trello.service;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 
-import javax.annotation.Resource;
+import java.util.Optional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
+import trello.UnAuthenticationException;
 import trello.domain.User;
 import trello.domain.UserRepository;
 
-@RunWith(SpringRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
-	private static final Logger log = LoggerFactory.getLogger(UserServiceTest.class);
 
-	@Resource(name = "userRepository")
+	@Mock
 	private UserRepository userRepository;
 
-	@Autowired
+	@InjectMocks
 	private UserService userService;
 
 	@Test
-	public void create() {
-		String email = "email@korea.kr";
-		User newUser = new User("name", "password", email);
-		userService.create(newUser);
-		assertEquals(newUser, userRepository.findByEmail(email));
+	public void loginSuccess() {
+		User user = new User("hue", "password", "hue@korea.kr");
+		when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+
+		User loginUser = userService.login(user);
+		assertThat(loginUser, is(user));
+	}
+
+	@Test(expected = UnAuthenticationException.class)
+	public void loginOtherEmail() {
+		User user = new User("hue", "password", "hue@korea.kr");
+		when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
+		userService.login(user);
+	}
+
+	@Test(expected = UnAuthenticationException.class)
+	public void loginOtherPassword() {
+		User user = new User("hue", "password", "hue@korea.kr");
+		User otheruser = new User("hue", "password22", "hue@korea.kr");
+		
+		when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+		userService.login(otheruser);
 	}
 
 }

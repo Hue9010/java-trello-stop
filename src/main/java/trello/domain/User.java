@@ -29,14 +29,14 @@ public class User {
 	@Size(min = 6, max = 50)
 	@Column(unique = true, nullable = false, length = 50)
 	private String email;
-	
+
 	public User() {
 	}
 
 	public User(String name, String password, String email) {
-		this(0L, name,password, email);
+		this(0L, name, password, email);
 	}
-	
+
 	public User(long id, String name, String password, String email) {
 		this.id = id;
 		this.name = name;
@@ -70,6 +70,10 @@ public class User {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public boolean matchPassword(String password) {
+		return password.equals(this.password);
 	}
 
 	@Override
@@ -111,5 +115,5 @@ public class User {
 			return false;
 		return true;
 	}
-	
+
 }

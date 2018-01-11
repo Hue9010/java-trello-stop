@@ -2,8 +2,12 @@ package trello.dto;
 
 import javax.validation.constraints.Size;
 
+import lombok.Getter;
+import lombok.Setter;
 import trello.domain.User;
 
+@Setter
+@Getter
 public class UserDto {
 	@Size(min = 3, max = 20)
 	private String name;
@@ -18,30 +22,6 @@ public class UserDto {
 	public UserDto(String name, String password, String email) {
 		this.name = name;
 		this.password = password;
-		this.email = email;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
 		this.email = email;
 	}
 

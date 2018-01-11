@@ -24,51 +24,73 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-
-
 import trello.domain.UserRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class UserControllerTest {
 	private static final Logger log = LoggerFactory.getLogger(UserControllerTest.class);
-	@Resource(name="userRepository")
+	@Resource(name = "userRepository")
 	private UserRepository userRepository;
 	@Autowired
 	private TestRestTemplate template;
 
 	@Test
-	public void createFormTest() {
+	public void createForm() {
 		ResponseEntity<String> response = template.getForEntity("/users/create", String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		log.debug("body : {}", response.getBody());
 	}
 
+	private ResponseEntity<String> createPostResponse(MultiValueMap<String, Object> params, String path) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+		HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<MultiValueMap<String, Object>>(params, headers);
+
+		return template.postForEntity(path, request, String.class);
+	}
+
+	private MultiValueMap<String, Object> createParams(String email, String name, String password) {
+		MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
+		params.add("email", email);
+		params.add("name", name);
+		params.add("password", password);
+		return params;
+	}
+
 	@Test
-	public void loginFormTest() {
+	public void create() throws Exception {
+		MultiValueMap<String, Object> params = createParams("testUser@korea.kr", "testUser", "password");
+		ResponseEntity<String> response = createPostResponse(params, "/users/create");
+
+		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+		assertTrue(userRepository.findByEmail("testUser@korea.kr").isPresent());
+		assertThat(response.getHeaders().getLocation().getPath(), is("/"));
+	}
+
+	@Test
+	public void loginForm() {
 		ResponseEntity<String> response = template.getForEntity("/users/login", String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		log.debug("body : {}", response.getBody());
 	}
 
-	@Test
-	public void create() throws Exception {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
-		String email = "testUser@korea.kr";
+	private MultiValueMap<String, Object> loginParams(String email, String password) {
 		MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
 		params.add("email", email);
-		params.add("name", "testUser");
-		params.add("password", "password");
-		HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<MultiValueMap<String, Object>>(params,
-				headers);
+		params.add("password", password);
+		return params;
+	}
 
-		ResponseEntity<String> response = template.postForEntity("/users/create", request, String.class);
+	@Test
+	public void loginSuccess() {
+		MultiValueMap<String, Object> params = loginParams("testUser@korea.kr", "password");
+		ResponseEntity<String> response = createPostResponse(params, "/users/login");
 
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-		assertTrue(userRepository.findByEmail(email).isPresent());
-		assertThat(response.getHeaders().getLocation().getPath(), is("/"));
+		assertTrue(response.getHeaders().getLocation().getPath().contains("/;jsessionid="));
 	}
+
 }
