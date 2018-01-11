@@ -28,8 +28,8 @@ import trello.domain.UserRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class UserControllerTest {
-	private static final Logger log = LoggerFactory.getLogger(UserControllerTest.class);
+public class UserAcceptanceTest {
+	private static final Logger log = LoggerFactory.getLogger(UserAcceptanceTest.class);
 	@Resource(name = "userRepository")
 	private UserRepository userRepository;
 	@Autowired

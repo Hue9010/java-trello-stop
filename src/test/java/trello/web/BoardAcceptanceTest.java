@@ -17,8 +17,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class BoardControllerTest {
-	private static final Logger log = LoggerFactory.getLogger(BoardControllerTest.class);
+public class BoardAcceptanceTest {
+	private static final Logger log = LoggerFactory.getLogger(BoardAcceptanceTest.class);
 
 	@Autowired
 	private TestRestTemplate template;
