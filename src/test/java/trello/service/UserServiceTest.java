@@ -29,7 +29,7 @@ public class UserServiceTest {
 	public void loginSuccess() {
 		User user = new User("hue", "password", "hue@korea.kr");
 		when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-
+   
 		User loginUser = userService.login(user);
 		assertThat(loginUser, is(user));
 	}

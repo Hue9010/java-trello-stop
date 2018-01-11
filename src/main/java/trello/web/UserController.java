@@ -43,12 +43,7 @@ public class UserController {
 
 	@PostMapping("/login")
 	public String login(UserDto userDto, HttpSession session) {
-//		try {
-			userService.login(userDto.toUser());
-			session.setAttribute("logined", userDto.toUser());
-//		} catch (UnAuthenticationException e) {
-//			log.debug("로그인 실패");
-//		}
+		session.setAttribute("loginedUser", userService.login(userDto.toUser()));
 		return "redirect:/";
 	}
 

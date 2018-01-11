@@ -87,7 +87,7 @@ public class UserAcceptanceTest {
 
 	@Test
 	public void loginSuccess() {
-		MultiValueMap<String, Object> params = loginParams("testUser@korea.kr", "password");
+		MultiValueMap<String, Object> params = loginParams("hue@korea.kr", "password");
 		ResponseEntity<String> response = createPostResponse(params, "/users/login");
 
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
@@ -104,7 +104,7 @@ public class UserAcceptanceTest {
 
 	@Test
 	public void loginOtherPassword() {
-		MultiValueMap<String, Object> params = loginParams("testUser@korea.kr", "password" + "222");
+		MultiValueMap<String, Object> params = loginParams("hue@korea.kr", "password" + "222");
 		ResponseEntity<String> response = createPostResponse(params, "/users/login");
 
 		assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
