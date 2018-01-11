@@ -10,6 +10,9 @@ import org.hibernate.validator.constraints.Email;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity
 public class User {
 	@Id
@@ -18,16 +21,22 @@ public class User {
 
 	@Size(min = 3, max = 20)
 	@Column(nullable = false, length = 20)
+	@Getter
+	@Setter
 	private String name;
 
 	@Size(min = 6, max = 20)
 	@Column(nullable = false, length = 20)
 	@JsonIgnore
+	@Getter
+	@Setter
 	private String password;
 
 	@Email
 	@Size(min = 6, max = 50)
 	@Column(unique = true, nullable = false, length = 50)
+	@Getter
+	@Setter
 	private String email;
 
 	public User() {
@@ -41,34 +50,6 @@ public class User {
 		this.id = id;
 		this.name = name;
 		this.password = password;
-		this.email = email;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
 		this.email = email;
 	}
 
