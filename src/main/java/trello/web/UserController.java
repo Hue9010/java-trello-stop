@@ -41,11 +41,11 @@ public class UserController {
 		return "/login";
 	}
 
-	@PostMapping("/login")
-	public String login(UserDto userDto, HttpSession session) {
-		session.setAttribute("loginedUser", userService.login(userDto.toUser()));
-		return "redirect:/";
-	}
+//	@PostMapping("/login")
+//	public String login(UserDto userDto, HttpSession session) {
+//		session.setAttribute("loginedUser", userService.login(userDto.toUser()));
+//		return "redirect:/";
+//	}
 
 	@ExceptionHandler(UnAuthenticationException.class)
 	@ResponseStatus(value = HttpStatus.UNAUTHORIZED)

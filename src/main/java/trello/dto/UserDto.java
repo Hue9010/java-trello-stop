@@ -4,10 +4,12 @@ import javax.validation.constraints.Size;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import trello.domain.User;
 
 @Setter
 @Getter
+@ToString
 public class UserDto {
 	@Size(min = 3, max = 20)
 	private String name;
@@ -17,6 +19,10 @@ public class UserDto {
 	private String email;
 
 	public UserDto() {
+	}
+
+	public UserDto(String email, String password) {
+		this("none", password, email);
 	}
 
 	public UserDto(String name, String password, String email) {
